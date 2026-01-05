@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог PAM-ресурсів | iITD Ukraine</title>
+    <meta name="description" content="Каталог курсів, сертифікацій та матеріалів для Partner Account Manager в кібербезпеці">
+    <style>
+        :root {
+            --bg: #121212;
+            --surface: #1f1f1f;
+            --text: #e0e0e0;
+            --accent: #bb86fc;
+            --accent-hover: #ffffff;
+            --border: #333333;
+        }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        header { background: var(--surface); padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+        h1 { color: var(--accent); margin: 0 0 10px 0; font-size: 1.8em; }
+        h2 { color: var(--accent); font-size: 1.4em; margin: 20px 0 10px 0; }
+        
+        .controls { 
+            background: var(--surface); 
+            padding: 15px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        #search { 
+            flex: 1 1 300px;
+            max-width: 500px;
+            padding: 10px; 
+            background: var(--bg); 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            border-radius: 6px; 
+            font-size: 1em; 
+        }
+        .filter-btn { 
+            background: var(--accent); 
+            color: #121212; 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+        .filter-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .filter-btn:active { transform: translateY(0); }
+        
+        nav { 
+            background: var(--surface); 
+            padding: 12px; 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        nav a { 
+            color: var(--accent); 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        nav a:hover { background: rgba(187,134,252,0.1); color: var(--accent-hover); }
+        
+        section { padding: 20px; max-width: 1400px; margin: 0 auto; }
+        
+        .accordion { 
+            background: var(--surface); 
+            color: var(--text); 
+            cursor: pointer; 
+            padding: 14px 18px; 
+            width: 100%; 
+            border: none; 
+            text-align: left; 
+            outline: none; 
+            font-size: 1.1em; 
+            transition: 0.3s; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion:hover { background: #2c2c2c; }
+        .accordion::after { 
+            content: '+'; 
+            font-size: 1.5em; 
+            line-height: 1;
+            transition: transform 0.3s;
+        }
+        .accordion.active::after { 
+            content: '−';
+            transform: rotate(180deg);
+        }
+        
+        .panel { 
+            max-height: 0;
+            overflow: hidden;
+            background: var(--surface); 
+            border-radius: 8px; 
+            transition: max-height 0.3s ease-out;
+        }
+        .panel.show { 
+            max-height: 10000px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 10px 0; 
+            font-size: 0.95em;
+        }
+        th, td { 
+            padding: 10px 8px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border); 
+            vertical-align: top; 
+        }
+        th { 
+            background: #2c2c2c; 
+            color: var(--accent); 
+            position: sticky; 
+            top: 70px; 
+            z-index: 10;
+            font-size: 0.9em;
+        }
+        tr:hover { background: rgba(187,134,252,0.05); }
+        tbody tr { transition: opacity 0.2s; }
+        tbody tr.hidden { display: none; }
+        
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-hover); text-decoration: underline; }
+        
+        .table-wrapper { overflow-x: auto; border-radius: 8px; }
+        
+        footer { 
+            background: var(--surface); 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 0.85em; 
+            margin-top: 40px; 
+            color: #999;
+        }
+        
+        .tag { 
+            display: inline-block; 
+            background: rgba(187,134,252,0.2); 
+            color: var(--accent); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            font-size: 0.85em; 
+            margin: 2px;
+        }
+        
+        @media (max-width: 768px) {
+            .controls { padding: 10px; }
+            .filter-btn { font-size: 0.85em; padding: 8px 12px; }
+            h1 { font-size: 1.4em; }
+            nav { padding: 8px; }
+            nav a { font-size: 0.85em; padding: 5px 8px; }
+            th, td { font-size: 0.85em; padding: 8px 6px; }
+            th { top: 60px; }
+            .accordion { font-size: 1em; padding: 12px 14px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PAM Knowledge Hub | iITD Ukraine</h1>
+        <p style="margin:0; font-size:0.95em; color:#aaa;">Ресурси для розвитку в кібербезпеці та compliance</p>
+    </header>
+
+    <div class="controls" role="search" aria-label="Фільтри каталогу">
+        <input type="text" id="search" placeholder="Пошук: ISO, CrowdStrike, DORA..." aria-label="Пошук ресурсів">
+        <button class="filter-btn" onclick="filterFree()" aria-label="Показати тільки безкоштовні">Безкоштовні</button>
+        <button class="filter-btn" onclick="filterCert()" aria-label="Показати сертифікації">Сертифікації</button>
+        <button class="filter-btn" onclick="resetFilter()" aria-label="Скинути всі фільтри">Скинути</button>
+    </div>
+
+    <nav role="navigation" aria-label="Навігація по розділах">
+        <a href="#basics">Основи</a>
+        <a href="#compliance">Compliance</a>
+        <a href="#vendors">Вендори</a>
+        <a href="#sales">Продажі</a>
+        <a href="#marketing">Маркетинг</a>
+        <a href="#soft">Soft Skills</a>
+        <a href="#certs">Сертифікації</a>
+        <a href="#extra">Додатково</a>
+    </nav>
+
+    <section id="basics">
+        <h2>1. Основи Кібербезпеки</h2>
+        <button class="accordion" aria-expanded="false" aria-controls="panel-basics">Основи Кібербезпеки</button>
+        <div class="panel" id="panel-basics" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Cybersecurity Basics: Threats & CIA Triad</td><td>Початковий</td><td>Coursera (Google)</td><td>20 год</td><td>Free (cert $49)</td><td><a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Intro to Cyber Threats: Ransomware</td><td>Середній</td><td>Udemy</td><td>15 год</td><td>$15–50</td><td><a href="https://www.udemy.com/topic/cybersecurity" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Gartner Magic Quadrant 2026</td><td>Просунутий</td><td>Gartner</td><td>2 год</td><td>Free (реєстрація)</td><td><a href="https://www.gartner.com/en/cybersecurity" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Ukraine Cybersecurity Law</td><td>Початковий</td><td>Кіберполіція</td><td>5 год</td><td>Free</td><td><a href="https://cyberpolice.gov.ua" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CIA Triad & Basic Compliance</td><td>Початковий</td><td>CompTIA</td><td>10 год</td><td>Free</td><td><a href="https://www.comptia.org/certifications/security" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>NIS2 & DORA Introduction</td><td>Середній</td><td>ENISA</td><td>1 год</td><td>Free</td><td><a href="https://www.enisa.europa.eu" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Zero Trust Fundamentals</td><td>Середній</td><td>Cloudflare</td><td>8 год</td><td>Free</td><td><a href="https://www.cloudflare.com/learning" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>IDC Cybersecurity Reports 2026</td><td>Просунутий</td><td>IDC</td><td>3 год</td><td>$500+</td><td><a href="https://www.idc.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Supply Chain Attacks Workshop</td><td>Просунутий</td><td>SANS</td><td>4 год</td><td>$200</td><td><a href="https://www.sans.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>DFARS/CMMC Basics</td><td>Початковий</td><td>NIST</td><td>5 год</td><td>Free</td><td><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Ransomware Defense Guide</td><td>Середній</td><td>Hacking Exposed</td><td>10 год</td><td>$20</td><td><a href="https://www.bitsight.com/learn" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Дія Signature & Ukraine Cyber Law</td><td>Початковий</td><td>Prometheus</td><td>12 год</td><td>Free</td><td><a href="https://prometheus.org.ua" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>GDPR Basics for EU Partners</td><td>Початковий</td><td>Udemy</td><td>6 год</td><td>$10</td><td><a href="https://www.udemy.com/topic/gdpr" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>SIEM & Threat Detection Intro</td><td>Середній</td><td>Pluralsight</td><td>8 год</td><td>$29/міс</td><td><a href="https://www.pluralsight.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="compliance">
+        <h2>2. Compliance та Стандарти</h2>
+        
+        <button class="accordion" aria-expanded="false">ISO 27001/27002</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>ISO 27001 Lead Implementer</td><td>Просунутий</td><td>PECB</td><td>40 год</td><td>$1000+</td><td><a href="https://pecb.com/en/education-and-certification-for-individuals/iso-iec-27001" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Foundation</td><td>Початковий</td><td>Advisera</td><td>10 год</td><td>Free</td><td><a href="https://advisera.com/training/iso-27001-courses" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Lead Auditor</td><td>Просунутий</td><td>Intertek</td><td>5 днів</td><td>$1500</td><td><a href="https://learning.intertek.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 2026 Update</td><td>Середній</td><td>Knowledge Academy</td><td>2 год</td><td>Free</td><td><a href="https://www.theknowledgeacademy.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Top ISO 27001 Courses</td><td>Середній</td><td>Udemy</td><td>20 год</td><td>$20–100</td><td><a href="https://www.udemy.com/topic/isoiec-27001" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Beginner's Guide</td><td>Початковий</td><td>ISMS.online</td><td>5 год</td><td>Free</td><td><a href="https://www.isms.online/iso-27001" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Compliance eBook</td><td>Середній</td><td>OneTrust</td><td>4 год</td><td>Free</td><td><a href="https://www.onetrust.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Internal Auditor</td><td>Просунутий</td><td>SGS</td><td>3 дні</td><td>$800</td><td><a href="https://www.sgs.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Toolkit Book</td><td>Середній</td><td>Amazon</td><td>10 год</td><td>$30</td><td><a href="https://www.amazon.com/s?k=ISO+27001+Toolkit" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27002 Controls Guide</td><td>Середній</td><td>NIST</td><td>6 год</td><td>Free</td><td><a href="https://www.nist.gov" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ISO 27001 Audit Simulations</td><td>Просунутий</td><td>TryHackMe</td><td>15 год</td><td>$10/міс</td><td><a href="https://tryhackme.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>PECB ISO 27001 Update 2026</td><td>Просунутий</td><td>PECB</td><td>2 год</td><td>Free</td><td><a href="https://pecb.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>BSI ISO 27001 Training</td><td>Середній</td><td>BSI Group</td><td>20 год</td><td>$500</td><td><a href="https://www.bsigroup.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button class="accordion" aria-expanded="false">PCI DSS, GDPR, DORA</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>PCI DSS Training & Qualification</td><td>Середній</td><td>PCI SSC</td><td>16 год</td><td>$1000+</td><td><a href="https://www.pcisecuritystandards.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>PCI Professional (PCIP)</td><td>Просунутий</td><td>PCI SSC</td><td>20 год</td><td>$500</td><td><a href="https://www.pcisecuritystandards.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>PCI DSS v4.0.1 Course</td><td>Середній</td><td>Secure Vectors</td><td>15 год</td><td>$300</td><td><a href="https://www.securevectors.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Top PCI DSS Courses</td><td>Початковий</td><td>Udemy</td><td>10 год</td><td>$20</td><td><a href="https://www.udemy.com/topic/pci-dss" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>PCI Awareness Training 2026</td><td>Середній</td><td>Maven Edu</td><td>8 год</td><td>$100</td><td><a href="https://edu.mavenx.co" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Top GDPR Courses</td><td>Початковий</td><td>Udemy</td><td>12 год</td><td>$15</td><td><a href="https://www.udemy.com/topic/gdpr" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>GDPR Compliance Training</td><td>Середній</td><td>EasyLlama</td><td>10 год</td><td>$50</td><td><a href="https://www.easyllama.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Data Privacy & GDPR Workshop</td><td>Просунутий</td><td>Gentex</td><td>5 днів</td><td>$4500</td><td><a href="https://www.gentextraining.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>GDPR Practitioner Cert</td><td>Просунутий</td><td>EU GDPR Institute</td><td>16 год</td><td>$800</td><td><a href="https://www.eugdpr.institute" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>DORA Lead Manager</td><td>Просунутий</td><td>PECB</td><td>24 год</td><td>$1500</td><td><a href="https://pecb.com/en/education-and-certification-for-individuals/dora" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>DORA Training Course</td><td>Середній</td><td>Firebrand</td><td>3 дні</td><td>$2000</td><td><a href="https://firebrand.training" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Understanding DORA</td><td>Початковий</td><td>LinkedIn Learning</td><td>1 год</td><td>$29/міс</td><td><a href="https://www.linkedin.com/learning" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button class="accordion" aria-expanded="false">DFARS/CMMC, NIST</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>CMMC 2.0 Courses</td><td>Просунутий</td><td>CyberSheath</td><td>20 год</td><td>$500</td><td><a href="https://cybersheath.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CMMC Resources & Docs</td><td>Середній</td><td>DoD CIO</td><td>10 год</td><td>Free</td><td><a href="https://dodcio.defense.gov/CMMC" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Best CMMC Training 2026</td><td>Просунутий</td><td>E-N Computers</td><td>15 год</td><td>$300</td><td><a href="https://www.encomputers.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>NIST CSF 2.0 Resources</td><td>Середній</td><td>NIST</td><td>8 год</td><td>Free</td><td><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>SOC 2 Compliance 2026</td><td>Середній</td><td>Sprinto</td><td>4 год</td><td>Free</td><td><a href="https://sprinto.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ITAR Cybersecurity</td><td>Просунутий</td><td>Secureframe</td><td>3 год</td><td>Free</td><td><a href="https://secureframe.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Ukraine Compliance Guidelines</td><td>Початковий</td><td>EU4Digital</td><td>5 год</td><td>Free</td><td><a href="https://eufordigital.eu" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="vendors">
+        <h2>3. Вендори iITD Ukraine</h2>
+        <button class="accordion" aria-expanded="false">Продукти та Вендори</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>CrowdStrike Falcon Cert</td><td>Середній</td><td>CrowdStrike Uni</td><td>20 год</td><td>$500</td><td><a href="https://www.crowdstrike.com/crowdstrike-university" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CrowdStrike Training</td><td>Просунутий</td><td>Westcon</td><td>15 год</td><td>$300</td><td><a href="https://academy.westconcomstor.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Cloudflare Zero Trust</td><td>Середній</td><td>Cloudflare</td><td>10 год</td><td>Free</td><td><a href="https://www.cloudflare.com/learning" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Vectra AI Training</td><td>Середній</td><td>Vectra</td><td>12 год</td><td>$200</td><td><a href="https://www.vectra.ai" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Bitsight Academy</td><td>Середній</td><td>Bitsight</td><td>15 год</td><td>Free</td><td><a href="https://academy.bitsight.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>SentinelOne University</td><td>Середній</td><td>SentinelOne</td><td>20 год</td><td>$300</td><td><a href="https://university.sentinelone.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Palo Alto Networks Edu</td><td>Просунутий</td><td>Palo Alto</td><td>40 год</td><td>$1000+</td><td><a href="https://www.paloaltonetworks.com/services/education" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>iITD Partner Training</td><td>Середній</td><td>iITD Ukraine</td><td>Варіює</td><td>Корпоративно</td><td><a href="https://iitd.ua" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="sales">
+        <h2>4. Управління Партнерами та Продажі</h2>
+        <button class="accordion" aria-expanded="false">Продажі та Управління</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>Partner Account Management</td><td>Середній</td><td>Korn Ferry</td><td>15 год</td><td>$500</td><td><a href="https://www.kornferry.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>B2B Sales in Cybersecurity</td><td>Просунутий</td><td>Upskillist</td><td>10 год</td><td>$100</td><td><a href="https://www.upskillist.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Sales Courses</td><td>Початковий</td><td>Coursera</td><td>20 год</td><td>Free</td><td><a href="https://www.coursera.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CRM: Salesforce/HubSpot</td><td>Середній</td><td>LinkedIn Learning</td><td>8 год</td><td>$29/міс</td><td><a href="https://www.linkedin.com/learning" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Challenger Sale in Cyber</td><td>Просунутий</td><td>Udemy</td><td>12 год</td><td>$20</td><td><a href="https://www.udemy.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="marketing">
+        <h2>5. Маркетинг та Бізнес-Розвиток</h2>
+        <button class="accordion" aria-expanded="false">Маркетинг та Розвиток</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>MDF for Cybersecurity 2026</td><td>Середній</td><td>iSales</td><td>5 год</td><td>Free</td><td><a href="https://isaless.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>IDC Reports 2026</td><td>Просунутий</td><td>IDC</td><td>5 год</td><td>$500</td><td><a href="https://www.idc.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ROI Calculators</td><td>Середній</td><td>Bitsight</td><td>2 год</td><td>Free</td><td><a href="https://www.bitsight.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="soft">
+        <h2>6. М'які Навички</h2>
+        <button class="accordion" aria-expanded="false">Soft Skills та Лідерство</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>Soft Skills for Sales</td><td>Середній</td><td>Activated Scale</td><td>10 год</td><td>$100</td><td><a href="https://www.activatedscale.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Sales Skills 2026</td><td>Просунутий</td><td>LinkedIn</td><td>5 год</td><td>Free</td><td><a href="https://www.linkedin.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Sales Manager Tips 2026</td><td>Середній</td><td>Cognism</td><td>3 год</td><td>Free</td><td><a href="https://www.cognism.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="certs">
+        <h2>7. Сертифікації</h2>
+        <button class="accordion" aria-expanded="false">Сертифікації та Спеціалізації</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>CompTIA Security+</td><td>Середній</td><td>CompTIA</td><td>40 год</td><td>$350</td><td><a href="https://www.comptia.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CISSP Certification</td><td>Просунутий</td><td>ISC2</td><td>60 год</td><td>$700</td><td><a href="https://www.isc2.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CISM Certification</td><td>Просунутий</td><td>ISACA</td><td>50 год</td><td>$760</td><td><a href="https://www.isaca.org" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CrowdStrike Falcon Admin</td><td>Середній</td><td>CrowdStrike</td><td>20 год</td><td>$300</td><td><a href="https://www.crowdstrike.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Lead Auditor ISO 27001</td><td>Просунутий</td><td>PECB/EXIN</td><td>40 год</td><td>$1500</td><td><a href="https://pecb.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>CMMC Assessor Training</td><td>Просунутий</td><td>DoD</td><td>30 год</td><td>$1000</td><td><a href="https://dodcio.defense.gov" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>DORA Compliance Certs</td><td>Просунутий</td><td>PECB</td><td>24 год</td><td>$1500</td><td><a href="https://pecb.com" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="extra">
+        <h2>8. Додаткові Ресурси</h2>
+        <button class="accordion" aria-expanded="false">Книги, Подкасти, Спільноти</button>
+        <div class="panel" role="region">
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Назва</th><th>Рівень</th><th>Джерело</th><th>Час</th><th>Вартість</th><th>Посилання</th></tr></thead>
+                    <tbody>
+                        <tr><td>Hacking Exposed: Cyber Attacks</td><td>Середній</td><td>Amazon</td><td>15 год</td><td>$25</td><td><a href="https://www.amazon.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>Darknet Diaries Podcast</td><td>Початковий</td><td>Darknet Diaries</td><td>Варіює</td><td>Free</td><td><a href="https://darknetdiaries.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>ENISA Webinars DORA/NIS2</td><td>Середній</td><td>ENISA</td><td>1-2 год</td><td>Free</td><td><a href="https://www.enisa.europa.eu" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>LinkedIn Cybersecurity UA</td><td>Варіює</td><td>LinkedIn</td><td>Постійно</td><td>Free</td><td><a href="https://www.linkedin.com" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>DOU.ua Security Forum</td><td>Варіює</td><td>DOU.ua</td><td>Постійно</td><td>Free</td><td><a href="https://dou.ua" target="_blank" rel="noopener">Link</a></td></tr>
+                        <tr><td>NIST CSF Tool</td><td>Середній</td><td>NIST</td><td>5 год</td><td>Free</td><td><a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener">Link</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        iITD Ukraine Knowledge Hub | 2026
+    </footer>
+
+    <script>
+        // Акордеони з правильною логікою
+        const accordions = document.querySelectorAll('.accordion');
+        accordions.forEach(acc => {
+            acc.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const panel = this.nextElementSibling;
+                
+                if (panel.classList.contains('show')) {
+                    panel.classList.remove('show');
+                    this.setAttribute('aria-expanded', 'false');
+                } else {
+                    panel.classList.add('show');
+                    this.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+
+        // Пошук з підтримкою кирилиці
+        const searchInput = document.getElementById('search');
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const filter = this.value.toLowerCase().trim();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                if (filter === '') {
+                    rows.forEach(row => row.classList.remove('hidden'));
+                    return;
+                }
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.classList.toggle('hidden', !text.includes(filter));
+                });
+            }, 300);
+        });
+
+        // Фільтр безкоштовні
+        function filterFree() {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cost = row.cells[4].textContent.toLowerCase();
+                row.classList.toggle('hidden', !cost.includes('free') && !cost.includes('безкоштовно'));
+            });
+        }
+
+        // Фільтр сертифікації
+        function filterCert() {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                row.classList.toggle('hidden', 
+                    !name.includes('cert') && 
+                    !name.includes('сертифікац') &&
+                    !name.includes('cissp') &&
+                    !name.includes('cism') &&
+                    !name.includes('comptia')
+                );
+            });
+        }
+
+        // Скинути фільтри
+        function resetFilter() {
+            document.querySelectorAll('tbody tr').forEach(row => row.classList.remove('hidden'));
+            searchInput.value = '';
+        }
+
+        // Клавіатурна навігація (Enter на кнопках)
+        accordions.forEach(acc => {
+            acc.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
