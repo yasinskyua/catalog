@@ -13,9 +13,11 @@ document.querySelectorAll('.level-btn').forEach(btn => {
                 row.style.display = '';
             } else {
                 const rowLevel = row.dataset.level;
-                row.style.display = rowLevel === level ? '' : 'none';
+                row.style.display = (rowLevel === level) ? '' : 'none';
             }
         });
+        
+        console.log('Level filter:', level); // Debug
     });
 });
 
@@ -52,7 +54,7 @@ searchInput.addEventListener('input', function() {
     }, 300);
 });
 
-// Filter Chips
+// Filter Chips - ВИПРАВЛЕНА ЛОГІКА
 document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', function() {
         this.classList.toggle('active');
@@ -61,30 +63,40 @@ document.querySelectorAll('.chip').forEach(chip => {
 });
 
 function applyFilters() {
-    const activeFilters = Array.from(document.querySelectorAll('.chip.active'))
-        .map(c => c.dataset.filter);
-    
+    const activeChips = document.querySelectorAll('.chip.active');
     const rows = document.querySelectorAll('tbody tr');
     
-    if (activeFilters.length === 0) {
+    // Якщо немає активних фільтрів - показати все
+    if (activeChips.length === 0) {
         rows.forEach(row => row.style.display = '');
         return;
     }
     
+    // Збираємо всі активні фільтри
+    const activeFilters = Array.from(activeChips).map(chip => chip.dataset.filter);
+    
+    console.log('Active filters:', activeFilters); // Debug
+    
     rows.forEach(row => {
         let shouldShow = false;
         
+        // Перевіряємо кожен фільтр
         activeFilters.forEach(filter => {
-            if (filter === 'free' && row.dataset.cost === 'free') {
-                shouldShow = true;
+            if (filter === 'free') {
+                // Фільтр "Безкоштовні"
+                if (row.dataset.cost === 'free') {
+                    shouldShow = true;
+                }
             } else if (filter === 'cert') {
-                const category = row.dataset.category || '';
-                if (category.includes('cert')) {
+                // Фільтр "Сертифікації"
+                const categories = row.dataset.category || '';
+                if (categories.includes('cert')) {
                     shouldShow = true;
                 }
             } else {
-                const category = row.dataset.category || '';
-                if (category.includes(filter)) {
+                // Фільтри: compliance, vendor, sales
+                const categories = row.dataset.category || '';
+                if (categories.includes(filter)) {
                     shouldShow = true;
                 }
             }
@@ -148,7 +160,10 @@ function loadProgress() {
 }
 
 // Init on load
-document.addEventListener('DOMContentLoaded', loadProgress);
+document.addEventListener('DOMContentLoaded', function() {
+    loadProgress();
+    console.log('Script loaded successfully'); // Debug
+});
 
 // Keyboard navigation
 document.addEventListener('keydown', function(e) {
