@@ -4,485 +4,546 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAM Knowledge Hub | iITD Ukraine</title>
-    <meta name="description" content="Твій персональний навігатор по знанням у кібербезпеці та compliance">
+    <meta name="description" content="Каталог з 100+ ресурсів для PAM у кібербезпеці">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="topbar">
-        <div>
-            <div class="logo">iITD | PAM Hub</div>
-            <div class="tagline">Твій персональний навігатор по знанням</div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="logo">iITD | PAM Hub</h1>
+                <p class="subtitle">100+ ресурсів для розвитку в кібербезпеці</p>
+            </div>
+            <div class="header-right">
+                <span class="resource-count" id="resourceCount">Показано: 0 ресурсів</span>
+            </div>
         </div>
-        <div class="level-selector">
-            <button class="level-btn active" data-level="all">Усі</button>
-            <button class="level-btn" data-level="Початковий">Junior</button>
-            <button class="level-btn" data-level="Середній">Mid</button>
-            <button class="level-btn" data-level="Просунутий">Senior</button>
-        </div>
-    </div>
+    </header>
 
-    <!-- Search Section -->
-    <div class="search-section">
+    <!-- Search & Filters -->
+    <section class="filter-section">
         <div class="container">
-            <div class="search-wrapper">
+            <!-- Search -->
+            <div class="search-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="mainSearch" placeholder="Що прокачати сьогодні? ISO, CrowdStrike, DORA...">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Пошук: ISO 27001, CrowdStrike, GDPR, Sales..."
+                >
+                <button class="clear-btn" id="clearSearch">✕</button>
             </div>
-            
-            <div class="filters">
-                <div class="chip" data-filter="free">💚 Безкоштовні</div>
-                <div class="chip" data-filter="cert">🎓 Сертифікації</div>
-                <div class="chip" data-filter="compliance">Compliance</div>
-                <div class="chip" data-filter="vendor">Вендори</div>
-                <div class="chip" data-filter="sales">Продажі</div>
+
+            <!-- Filter Groups -->
+            <div class="filter-groups">
+                <!-- Рівень -->
+                <div class="filter-group">
+                    <label class="filter-label">Рівень складності</label>
+                    <div class="filter-chips">
+                        <button class="filter-chip active" data-filter="level" data-value="all">Усі</button>
+                        <button class="filter-chip" data-filter="level" data-value="Початковий">Початковий</button>
+                        <button class="filter-chip" data-filter="level" data-value="Середній">Середній</button>
+                        <button class="filter-chip" data-filter="level" data-value="Просунутий">Просунутий</button>
+                    </div>
+                </div>
+
+                <!-- Вартість -->
+                <div class="filter-group">
+                    <label class="filter-label">Вартість</label>
+                    <div class="filter-chips">
+                        <button class="filter-chip active" data-filter="cost" data-value="all">Усі</button>
+                        <button class="filter-chip" data-filter="cost" data-value="free">💚 Безкоштовні</button>
+                        <button class="filter-chip" data-filter="cost" data-value="paid">💰 Платні</button>
+                    </div>
+                </div>
+
+                <!-- Категорії -->
+                <div class="filter-group full-width">
+                    <label class="filter-label">Категорії (множинний вибір)</label>
+                    <div class="filter-chips">
+                        <button class="filter-chip" data-filter="category" data-value="basics">🎯 Основи</button>
+                        <button class="filter-chip" data-filter="category" data-value="compliance">🛡️ Compliance</button>
+                        <button class="filter-chip" data-filter="category" data-value="vendor">🚀 Вендори</button>
+                        <button class="filter-chip" data-filter="category" data-value="sales">💼 Продажі</button>
+                        <button class="filter-chip" data-filter="category" data-value="soft">💬 Soft Skills</button>
+                        <button class="filter-chip" data-filter="category" data-value="cert">🎓 Сертифікації</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filters & Reset -->
+            <div class="filter-actions">
+                <div class="active-filters" id="activeFilters"></div>
+                <button class="reset-btn" id="resetBtn">Скинути всі фільтри</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Tabs -->
-    <div class="tabs">
-        <button class="tab active" data-tab="tracks">📚 Навчальні Треки</button>
-        <button class="tab" data-tab="catalog">🗂️ Каталог Ресурсів</button>
-        <button class="tab" data-tab="plan">✅ Мій План</button>
-    </div>
-
-    <!-- Tab Content -->
-    <div class="container">
-        <!-- Tracks Tab -->
-        <div class="tab-content active" id="tracks">
-            <!-- Quick Start -->
-            <div class="quick-start">
-                <h2>⚡ Швидкий старт (перший тиждень)</h2>
-                <div class="quick-start-grid">
-                    <div class="quick-card">
-                        <h3>CIA Triad & Basic Compliance</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Початковий</span>
-                            <span class="badge">10 год</span>
-                        </div>
-                        <a href="https://www.comptia.org/certifications/security" target="_blank" class="resource-link">Розпочати →</a>
+    <!-- Resources Grid -->
+    <section class="resources-section">
+        <div class="container">
+            <div class="resources-grid" id="resourcesGrid">
+                
+                <!-- Resource Card Template -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="free" 
+                     data-category="basics compliance"
+                     data-search="foundations cybersecurity basics google coursera cia triad">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge free">Free</span>
                     </div>
-                    
-                    <div class="quick-card">
-                        <h3>Zero Trust Fundamentals</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Середній</span>
-                            <span class="badge">8 год</span>
-                        </div>
-                        <a href="https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust/" target="_blank" class="resource-link">Розпочати →</a>
+                    <h3 class="card-title">Foundations of Cybersecurity</h3>
+                    <p class="card-source">Coursera (Google)</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">📚 Основи</span>
                     </div>
-                    
-                    <div class="quick-card">
-                        <h3>NIS2 & DORA Introduction</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Середній</span>
-                            <span class="badge">1 год</span>
-                        </div>
-                        <a href="https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new" target="_blank" class="resource-link">Розпочати →</a>
-                    </div>
-                    
-                    <div class="quick-card">
-                        <h3>Ukraine Cybersecurity Law</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Початковий</span>
-                            <span class="badge">5 год</span>
-                        </div>
-                        <a href="https://cyberpolice.gov.ua" target="_blank" class="resource-link">Розпочати →</a>
-                    </div>
-                    
-                    <div class="quick-card">
-                        <h3>Foundations of Cybersecurity</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Початковий</span>
-                            <span class="badge">20 год</span>
-                        </div>
-                        <a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" class="resource-link">Розпочати →</a>
-                    </div>
-                    
-                    <div class="quick-card">
-                        <h3>Cloudflare Learning Center</h3>
-                        <div class="quick-card-meta">
-                            <span class="badge free">Free</span>
-                            <span class="badge level">Середній</span>
-                            <span class="badge">10 год</span>
-                        </div>
-                        <a href="https://www.cloudflare.com/learning/" target="_blank" class="resource-link">Розпочати →</a>
+                    <p class="card-description">Базові концепції загроз, CIA Triad для розуміння партнерів</p>
+                    <div class="card-footer">
+                        <a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" class="btn-primary">Відкрити курс →</a>
                     </div>
                 </div>
+
+                <!-- Card 2 -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="free" 
+                     data-category="basics compliance"
+                     data-search="comptia security+ certification basic compliance cia">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">CompTIA Security+ Materials</h3>
+                    <p class="card-source">CompTIA</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 40 год</span>
+                        <span class="meta-item">📚 Compliance</span>
+                    </div>
+                    <p class="card-description">Базовий cert для розуміння compliance та безпеки</p>
+                    <div class="card-footer">
+                        <a href="https://www.comptia.org/certifications/security" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="free" 
+                     data-category="basics vendor"
+                     data-search="cloudflare zero trust sase gdpr learning">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">Cloudflare Learning Center</h3>
+                    <p class="card-source">Cloudflare</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 10 год</span>
+                        <span class="meta-item">🚀 Вендори</span>
+                    </div>
+                    <p class="card-description">Zero Trust, SASE для GDPR compliance</p>
+                    <div class="card-footer">
+                        <a href="https://www.cloudflare.com/learning/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="free" 
+                     data-category="basics compliance"
+                     data-search="nis2 dora enisa europe financial regulation">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">NIS2 & DORA Overview</h3>
+                    <p class="card-source">ENISA</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 2 год</span>
+                        <span class="meta-item">🛡️ Compliance</span>
+                    </div>
+                    <p class="card-description">EU регуляції для financial sector</p>
+                    <div class="card-footer">
+                        <a href="https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="free" 
+                     data-category="basics"
+                     data-search="ukraine cyber law кіберполіція діа">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">Ukraine Cyber Law & Guidelines</h3>
+                    <p class="card-source">Кіберполіція України</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 5 год</span>
+                        <span class="meta-item">📚 Локальний контекст</span>
+                    </div>
+                    <p class="card-description">Українське законодавство з кібербезпеки</p>
+                    <div class="card-footer">
+                        <a href="https://cyberpolice.gov.ua" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 6: ISO 27001 -->
+                <div class="resource-card" 
+                     data-level="Просунутий" 
+                     data-cost="paid" 
+                     data-category="compliance cert"
+                     data-search="iso 27001 lead implementer pecb isms certification">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$1000+</span>
+                    </div>
+                    <h3 class="card-title">ISO 27001 Lead Implementer</h3>
+                    <p class="card-source">PECB</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 40 год</span>
+                        <span class="meta-item">🎓 Сертифікація</span>
+                    </div>
+                    <p class="card-description">Побудова ISMS, audit для enterprise-партнерів</p>
+                    <div class="card-footer">
+                        <a href="https://pecb.com/en/education-and-certification-for-individuals/iso-iec-27001" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="free" 
+                     data-category="compliance"
+                     data-search="iso 27001 foundation advisera isms basics">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">ISO 27001 Foundation</h3>
+                    <p class="card-source">Advisera</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 10 год</span>
+                        <span class="meta-item">🛡️ Compliance</span>
+                    </div>
+                    <p class="card-description">Базовий огляд ISO для вступних консультацій</p>
+                    <div class="card-footer">
+                        <a href="https://advisera.com/27001academy/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="compliance"
+                     data-search="iso 27001 udemy courses isms implementation">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge paid">$20-100</span>
+                    </div>
+                    <h3 class="card-title">ISO 27001 Courses Collection</h3>
+                    <p class="card-source">Udemy</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">🛡️ Compliance</span>
+                    </div>
+                    <p class="card-description">Практичні курси з впровадження ISO</p>
+                    <div class="card-footer">
+                        <a href="https://www.udemy.com/topic/isoiec-27001/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 9: PCI DSS -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="compliance cert"
+                     data-search="pci dss training payment security fintech">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$1000+</span>
+                    </div>
+                    <h3 class="card-title">PCI DSS Training & Qualification</h3>
+                    <p class="card-source">PCI SSC</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 16 год</span>
+                        <span class="meta-item">🎓 Сертифікація</span>
+                    </div>
+                    <p class="card-description">Для fintech/ритейл партнерів, payment security</p>
+                    <div class="card-footer">
+                        <a href="https://www.pcisecuritystandards.org" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 10: GDPR -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="paid" 
+                     data-category="compliance"
+                     data-search="gdpr data protection privacy eu regulation">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge paid">$15</span>
+                    </div>
+                    <h3 class="card-title">GDPR Compliance Courses</h3>
+                    <p class="card-source">Udemy</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 12 год</span>
+                        <span class="meta-item">🛡️ Compliance</span>
+                    </div>
+                    <p class="card-description">Data protection для EU партнерів</p>
+                    <div class="card-footer">
+                        <a href="https://www.udemy.com/topic/gdpr/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 11: DORA -->
+                <div class="resource-card" 
+                     data-level="Просунутий" 
+                     data-cost="paid" 
+                     data-category="compliance cert"
+                     data-search="dora financial regulation resilience pecb">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$1500</span>
+                    </div>
+                    <h3 class="card-title">DORA Lead Manager</h3>
+                    <p class="card-source">PECB</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 24 год</span>
+                        <span class="meta-item">🎓 Сертифікація</span>
+                    </div>
+                    <p class="card-description">Resilience для financial з DORA enforcement</p>
+                    <div class="card-footer">
+                        <a href="https://pecb.com/en/education-and-certification-for-individuals/dora" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 12: CMMC -->
+                <div class="resource-card" 
+                     data-level="Просунутий" 
+                     data-cost="paid" 
+                     data-category="compliance cert"
+                     data-search="cmmc dfars us defense cybersheath nist">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$500</span>
+                    </div>
+                    <h3 class="card-title">CMMC 2.0 Courses</h3>
+                    <p class="card-source">CyberSheath</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">🎓 Сертифікація</span>
+                    </div>
+                    <p class="card-description">US-defense compliance, Level 2/3</p>
+                    <div class="card-footer">
+                        <a href="https://cybersheath.com" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 13: NIST -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="free" 
+                     data-category="compliance"
+                     data-search="nist csf framework cybersecurity risk">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">NIST CSF 2.0 Resources</h3>
+                    <p class="card-source">NIST</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 8 год</span>
+                        <span class="meta-item">🛡️ Compliance</span>
+                    </div>
+                    <p class="card-description">Framework tool для hybrid compliance</p>
+                    <div class="card-footer">
+                        <a href="https://www.nist.gov/cyberframework" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 14: CrowdStrike -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="vendor cert"
+                     data-search="crowdstrike falcon edr xdr certification">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$500</span>
+                    </div>
+                    <h3 class="card-title">CrowdStrike Falcon Certification</h3>
+                    <p class="card-source">CrowdStrike University</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">🚀 Вендори</span>
+                    </div>
+                    <p class="card-description">EDR/XDR для NIST compliance продажів</p>
+                    <div class="card-footer">
+                        <a href="https://www.crowdstrike.com/university/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 15: Bitsight -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="free" 
+                     data-category="vendor"
+                     data-search="bitsight risk rating vendor assessment academy">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">Bitsight Academy</h3>
+                    <p class="card-source">Bitsight</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 15 год</span>
+                        <span class="meta-item">🚀 Вендори</span>
+                    </div>
+                    <p class="card-description">Risk rating для vendor risk/CMMC</p>
+                    <div class="card-footer">
+                        <a href="https://www.bitsight.com/products/bitsight-academy" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 16: SentinelOne -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="vendor"
+                     data-search="sentinelone endpoint protection university training">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge paid">$300</span>
+                    </div>
+                    <h3 class="card-title">SentinelOne University</h3>
+                    <p class="card-source">SentinelOne</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">🚀 Вендори</span>
+                    </div>
+                    <p class="card-description">Endpoint для ransomware defense</p>
+                    <div class="card-footer">
+                        <a href="https://university.sentinelone.com/" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 17: Sales -->
+                <div class="resource-card" 
+                     data-level="Початковий" 
+                     data-cost="free" 
+                     data-category="sales"
+                     data-search="sales strategy coursera b2b negotiation">
+                    <div class="card-header">
+                        <span class="badge level">Початковий</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">Sales Strategy</h3>
+                    <p class="card-source">Coursera</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 20 год</span>
+                        <span class="meta-item">💼 Продажі</span>
+                    </div>
+                    <p class="card-description">Negotiation для B2B tech sales</p>
+                    <div class="card-footer">
+                        <a href="https://www.coursera.org/learn/sales-strategy" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 18: B2B Sales -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="sales"
+                     data-search="b2b sales linkedin learning crm process">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge paid">$29/міс</span>
+                    </div>
+                    <h3 class="card-title">B2B Sales Process</h3>
+                    <p class="card-source">LinkedIn Learning</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 10 год</span>
+                        <span class="meta-item">💼 Продажі</span>
+                    </div>
+                    <p class="card-description">CRM та партнерські програми</p>
+                    <div class="card-footer">
+                        <a href="https://www.linkedin.com/learning/topics/sales" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 19: Soft Skills -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="free" 
+                     data-category="soft"
+                     data-search="soft skills communication leadership linkedin">
+                    <div class="card-header">
+                        <span class="badge level">Середній</span>
+                        <span class="badge free">Free</span>
+                    </div>
+                    <h3 class="card-title">Sales Skills 2026</h3>
+                    <p class="card-source">LinkedIn</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 5 год</span>
+                        <span class="meta-item">💬 Soft Skills</span>
+                    </div>
+                    <p class="card-description">Communication для C-level presentations</p>
+                    <div class="card-footer">
+                        <a href="https://www.linkedin.com/learning" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
+                <!-- Card 20: CompTIA Cert -->
+                <div class="resource-card" 
+                     data-level="Середній" 
+                     data-cost="paid" 
+                     data-category="cert"
+                     data-search="comptia security+ certification exam prep">
+                    <div class="card-header">
+                        <span class="badge cert">Cert</span>
+                        <span class="badge paid">$350</span>
+                    </div>
+                    <h3 class="card-title">CompTIA Security+</h3>
+                    <p class="card-source">CompTIA</p>
+                    <div class="card-meta">
+                        <span class="meta-item">⏱️ 40 год</span>
+                        <span class="meta-item">🎓 Сертифікація</span>
+                    </div>
+                    <p class="card-description">Базовий cert з compliance для консультацій</p>
+                    <div class="card-footer">
+                        <a href="https://www.comptia.org/certifications/security" target="_blank" class="btn-primary">Відкрити →</a>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Learning Tracks (без змін) -->
-            <div class="section-header">
-                <h2>Навчальні Треки</h2>
-            </div>
-            
-            <div class="tracks-grid">
-                <!-- Track 1 -->
-                <div class="track-card">
-                    <div class="track-header">
-                        <div>
-                            <h3>🎯 PAM Basics</h3>
-                            <div class="track-duration">2-4 тижні · Початковий</div>
-                        </div>
-                    </div>
-                    <p class="track-description">Базові знання для старту: загрози, compliance, основи продажів B2B у кібербезпеці</p>
-                    <div class="track-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-text">0 з 5 завершено</div>
-                    </div>
-                    <ul class="track-steps">
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Foundations of Cybersecurity (Coursera, 20 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Ukraine Cybersecurity Law (5 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">B2B Sales Courses (Coursera, 20 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Soft Skills for Sales (10 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: підготуй pitch для партнера</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Track 2 -->
-                <div class="track-card">
-                    <div class="track-header">
-                        <div>
-                            <h3>🛡️ Compliance PAM</h3>
-                            <div class="track-duration">6-8 тижнів · Середній-Просунутий</div>
-                        </div>
-                    </div>
-                    <p class="track-description">Глибоке розуміння ISO 27001, PCI DSS, DORA, GDPR для консультацій enterprise-партнерів</p>
-                    <div class="track-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-text">0 з 7 завершено</div>
-                    </div>
-                    <ul class="track-steps">
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">ISO 27001 Foundation (10 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">ISO 27001 Courses (Udemy, 20 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">PCI DSS v4.0.1 (15 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">GDPR Compliance (10 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">DORA Training (24 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">NIST CSF 2.0 (8 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: створи compliance roadmap</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Track 3 -->
-                <div class="track-card">
-                    <div class="track-header">
-                        <div>
-                            <h3>🚀 Vendor Specialist</h3>
-                            <div class="track-duration">4-6 тижнів · Середній</div>
-                        </div>
-                    </div>
-                    <p class="track-description">Експертиза по ключових вендорах iITD: CrowdStrike, Cloudflare, Vectra, Bitsight</p>
-                    <div class="track-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-text">0 з 5 завершено</div>
-                    </div>
-                    <ul class="track-steps">
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">CrowdStrike Falcon (20 год, $500)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Cloudflare Zero Trust (10 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Vectra AI (12 год, $200)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Bitsight Academy (15 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: competitive analysis</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Track 4 -->
-                <div class="track-card">
-                    <div class="track-header">
-                        <div>
-                            <h3>🇺🇸 US Defense Compliance</h3>
-                            <div class="track-duration">3-4 тижні · Просунутий</div>
-                        </div>
-                    </div>
-                    <p class="track-description">CMMC, DFARS, ITAR для US defense contractors</p>
-                    <div class="track-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-text">0 з 4 завершено</div>
-                    </div>
-                    <ul class="track-steps">
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">DFARS/CMMC Basics (5 год)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">CMMC 2.0 (20 год, $500)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">CMMC Training (15 год, $300)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: CMMC checklist</div>
-                        </li>
-                    </ul>
-                </div>
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>Нічого не знайдено</h3>
+                <p>Спробуй змінити фільтри або пошуковий запит</p>
+                <button class="btn-secondary" onclick="resetAllFilters()">Скинути фільтри</button>
             </div>
         </div>
+    </section>
 
-        <!-- Catalog Tab -->
-        <div class="tab-content" id="catalog">
-            <div class="section-header">
-                <h2>Каталог Ресурсів</h2>
-            </div>
-            <p class="section-description">Повний перелік курсів та матеріалів. Фільтри працюють!</p>
-            
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Основи Кібербезпеки</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="Початковий" data-cost="free" data-category="basics">
-                            <td>Foundations of Cybersecurity</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Coursera (Google)</td>
-                            <td>20 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Початковий" data-cost="free" data-category="basics compliance">
-                            <td>CompTIA Security+ Materials</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>CompTIA</td>
-                            <td>40 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.comptia.org/certifications/security" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="free" data-category="basics vendor">
-                            <td>Cloudflare Learning Center</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Cloudflare</td>
-                            <td>10 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.cloudflare.com/learning/" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="free" data-category="basics compliance">
-                            <td>NIS2 Directive Overview</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>ENISA</td>
-                            <td>2 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Початковий" data-cost="free" data-category="basics">
-                            <td>Ukraine Cyber Law & Guidelines</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Кіберполіція України</td>
-                            <td>5 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://cyberpolice.gov.ua" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Compliance: ISO 27001</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="Просунутий" data-cost="paid" data-category="compliance cert">
-                            <td>ISO 27001 Lead Implementer</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>PECB</td>
-                            <td>40 год</td>
-                            <td>$1000+</td>
-                            <td><a href="https://pecb.com/en/education-and-certification-for-individuals/iso-iec-27001" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Початковий" data-cost="free" data-category="compliance">
-                            <td>ISO 27001 Foundation</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Advisera</td>
-                            <td>10 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://advisera.com/27001academy/" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="paid" data-category="compliance">
-                            <td>ISO 27001 Courses</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Udemy</td>
-                            <td>20 год</td>
-                            <td>$20-100</td>
-                            <td><a href="https://www.udemy.com/topic/isoiec-27001/" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Вендори iITD</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="Середній" data-cost="paid" data-category="vendor cert">
-                            <td>CrowdStrike University</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>CrowdStrike</td>
-                            <td>20 год</td>
-                            <td>$500</td>
-                            <td><a href="https://www.crowdstrike.com/university/" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="free" data-category="vendor">
-                            <td>Bitsight Academy</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Bitsight</td>
-                            <td>15 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.bitsight.com/products/bitsight-academy" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="paid" data-category="vendor">
-                            <td>SentinelOne University</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>SentinelOne</td>
-                            <td>20 год</td>
-                            <td>$300</td>
-                            <td><a href="https://university.sentinelone.com/" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Продажі та Soft Skills</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="Початковий" data-cost="free" data-category="sales">
-                            <td>Sales Strategy</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Coursera</td>
-                            <td>20 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.coursera.org/learn/sales-strategy" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="Середній" data-cost="paid" data-category="sales">
-                            <td>B2B Sales Process</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>LinkedIn Learning</td>
-                            <td>10 год</td>
-                            <td>$29/міс</td>
-                            <td><a href="https://www.linkedin.com/learning/topics/sales" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>iITD Ukraine | PAM Knowledge Hub 2026 · Made with 💜</p>
+            <p class="footer-note">Shortcut: "/" для пошуку · "Esc" для очистки</p>
         </div>
-
-        <!-- My Plan Tab -->
-        <div class="tab-content" id="plan">
-            <div class="section-header">
-                <h2>Мій План Навчання</h2>
-            </div>
-            <div class="plan-empty">
-                <h3>📋 Тут поки що порожньо</h3>
-                <p>Додавай ресурси з каталогу, щоб побудувати свій план.</p>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        iITD Ukraine | PAM Knowledge Hub 2026 · Made with 💜
     </footer>
 
     <script src="script.js"></script>
