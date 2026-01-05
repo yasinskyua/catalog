@@ -1,180 +1,292 @@
-// Level Selector
-document.querySelectorAll('.level-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Remove active from all
-        document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        const level = this.dataset.level;
-        const rows = document.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            if (level === 'all') {
-                row.style.display = '';
-            } else {
-                const rowLevel = row.dataset.level;
-                row.style.display = (rowLevel === level) ? '' : 'none';
-            }
-        });
-        
-        console.log('Level filter:', level); // Debug
-    });
+// State
+let activeFilters = {
+    level: 'all',
+    cost: 'all',
+    categories: []
+};
+
+// Elements
+const searchInput = document.getElementById('searchInput');
+const clearBtn = document.getElementById('clearSearch');
+const resourcesGrid = document.getElementById('resourcesGrid');
+const emptyState = document.getElementById('emptyState');
+const resourceCount = document.getElementById('resourceCount');
+const activeFiltersContainer = document.getElementById('activeFilters');
+const resetBtn = document.getElementById('resetBtn');
+
+// Get all cards
+const allCards = document.querySelectorAll('.resource-card');
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateResourceCount();
+    setupEventListeners();
+    console.log('PAM Hub initialized with', allCards.length, 'resources');
 });
 
-// Tabs
-document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        this.classList.add('active');
-        document.getElementById(this.dataset.tab).classList.add('active');
-    });
-});
-
-// Search with debounce
-const searchInput = document.getElementById('mainSearch');
-let searchTimeout;
-
-searchInput.addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        const filter = this.value.toLowerCase().trim();
-        const rows = document.querySelectorAll('tbody tr');
-        
-        if (filter === '') {
-            rows.forEach(row => row.style.display = '');
-            return;
-        }
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(filter) ? '' : 'none';
-        });
-    }, 300);
-});
-
-// Filter Chips - ВИПРАВЛЕНА ЛОГІКА
-document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', function() {
-        this.classList.toggle('active');
-        applyFilters();
-    });
-});
-
-function applyFilters() {
-    const activeChips = document.querySelectorAll('.chip.active');
-    const rows = document.querySelectorAll('tbody tr');
+// Setup Event Listeners
+function setupEventListeners() {
+    // Search input
+    searchInput.addEventListener('input', debounce(handleSearch, 300));
     
-    // Якщо немає активних фільтрів - показати все
-    if (activeChips.length === 0) {
-        rows.forEach(row => row.style.display = '');
-        return;
+    // Clear button
+    clearBtn.addEventListener('click', clearSearch);
+    
+    // Filter chips
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', handleFilterClick);
+    });
+    
+    // Reset button
+    resetBtn.addEventListener('click', resetAllFilters);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+}
+
+// Handle Filter Click
+function handleFilterClick(e) {
+    const chip = e.currentTarget;
+    const filterType = chip.dataset.filter;
+    const filterValue = chip.dataset.value;
+    
+    if (filterType === 'level' || filterType === 'cost') {
+        // Single selection filters
+        const siblings = chip.parentElement.querySelectorAll('.filter-chip');
+        siblings.forEach(s => s.classList.remove('active'));
+        chip.classList.add('active');
+        
+        activeFilters[filterType] = filterValue;
+    } else if (filterType === 'category') {
+        // Multiple selection filter
+        chip.classList.toggle('active');
+        
+        if (chip.classList.contains('active')) {
+            if (!activeFilters.categories.includes(filterValue)) {
+                activeFilters.categories.push(filterValue);
+            }
+        } else {
+            activeFilters.categories = activeFilters.categories.filter(v => v !== filterValue);
+        }
     }
     
-    // Збираємо всі активні фільтри
-    const activeFilters = Array.from(activeChips).map(chip => chip.dataset.filter);
+    applyFilters();
+}
+
+// Apply All Filters
+function applyFilters() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
     
-    console.log('Active filters:', activeFilters); // Debug
-    
-    rows.forEach(row => {
-        let shouldShow = false;
+    allCards.forEach(card => {
+        let shouldShow = true;
         
-        // Перевіряємо кожен фільтр
-        activeFilters.forEach(filter => {
-            if (filter === 'free') {
-                // Фільтр "Безкоштовні"
-                if (row.dataset.cost === 'free') {
-                    shouldShow = true;
-                }
-            } else if (filter === 'cert') {
-                // Фільтр "Сертифікації"
-                const categories = row.dataset.category || '';
-                if (categories.includes('cert')) {
-                    shouldShow = true;
-                }
-            } else {
-                // Фільтри: compliance, vendor, sales
-                const categories = row.dataset.category || '';
-                if (categories.includes(filter)) {
-                    shouldShow = true;
-                }
+        // Level filter
+        if (activeFilters.level !== 'all') {
+            const cardLevel = card.dataset.level;
+            if (cardLevel !== activeFilters.level) {
+                shouldShow = false;
             }
-        });
+        }
         
-        row.style.display = shouldShow ? '' : 'none';
-    });
-}
-
-// Track Progress
-document.querySelectorAll('.step-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('click', function() {
-        this.classList.toggle('checked');
+        // Cost filter
+        if (activeFilters.cost !== 'all') {
+            const cardCost = card.dataset.cost;
+            if (cardCost !== activeFilters.cost) {
+                shouldShow = false;
+            }
+        }
         
-        const trackCard = this.closest('.track-card');
-        const total = trackCard.querySelectorAll('.step-checkbox').length;
-        const checked = trackCard.querySelectorAll('.step-checkbox.checked').length;
-        const percentage = (checked / total) * 100;
+        // Category filter (multiple selection - OR logic)
+        if (activeFilters.categories.length > 0) {
+            const cardCategories = card.dataset.category.split(' ');
+            const hasMatch = activeFilters.categories.some(cat => 
+                cardCategories.includes(cat)
+            );
+            if (!hasMatch) {
+                shouldShow = false;
+            }
+        }
         
-        trackCard.querySelector('.progress-fill').style.width = percentage + '%';
-        trackCard.querySelector('.progress-text').textContent = `${checked} з ${total} завершено`;
+        // Search filter
+        if (searchTerm) {
+            const searchData = card.dataset.search.toLowerCase();
+            const cardText = card.textContent.toLowerCase();
+            if (!searchData.includes(searchTerm) && !cardText.includes(searchTerm)) {
+                shouldShow = false;
+            }
+        }
         
-        // Save to localStorage
-        saveProgress(trackCard);
-    });
-});
-
-// Save/Load Progress
-function saveProgress(trackCard) {
-    const trackTitle = trackCard.querySelector('h3').textContent;
-    const checkboxes = trackCard.querySelectorAll('.step-checkbox');
-    const progress = Array.from(checkboxes).map(cb => cb.classList.contains('checked'));
-    
-    localStorage.setItem(`track-${trackTitle}`, JSON.stringify(progress));
-}
-
-function loadProgress() {
-    document.querySelectorAll('.track-card').forEach(card => {
-        const trackTitle = card.querySelector('h3').textContent;
-        const saved = localStorage.getItem(`track-${trackTitle}`);
-        
-        if (saved) {
-            const progress = JSON.parse(saved);
-            const checkboxes = card.querySelectorAll('.step-checkbox');
-            
-            progress.forEach((checked, index) => {
-                if (checked && checkboxes[index]) {
-                    checkboxes[index].classList.add('checked');
-                }
-            });
-            
-            // Update progress bar
-            const total = checkboxes.length;
-            const checkedCount = progress.filter(p => p).length;
-            const percentage = (checkedCount / total) * 100;
-            
-            card.querySelector('.progress-fill').style.width = percentage + '%';
-            card.querySelector('.progress-text').textContent = `${checkedCount} з ${total} завершено`;
+        // Show/hide card
+        if (shouldShow) {
+            card.style.display = '';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
         }
     });
+    
+    // Update UI
+    updateResourceCount(visibleCount);
+    updateActiveFiltersDisplay();
+    toggleEmptyState(visibleCount === 0);
+    
+    console.log('Filters applied:', activeFilters, 'Visible:', visibleCount);
 }
 
-// Init on load
-document.addEventListener('DOMContentLoaded', function() {
-    loadProgress();
-    console.log('Script loaded successfully'); // Debug
-});
+// Handle Search
+function handleSearch(e) {
+    const value = e.target.value;
+    clearBtn.classList.toggle('visible', value.length > 0);
+    applyFilters();
+}
 
-// Keyboard navigation
-document.addEventListener('keydown', function(e) {
-    if (e.key === '/' && e.target.tagName !== 'INPUT') {
+// Clear Search
+function clearSearch() {
+    searchInput.value = '';
+    clearBtn.classList.remove('visible');
+    searchInput.focus();
+    applyFilters();
+}
+
+// Reset All Filters
+function resetAllFilters() {
+    // Reset state
+    activeFilters = {
+        level: 'all',
+        cost: 'all',
+        categories: []
+    };
+    
+    // Reset UI
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        if (chip.dataset.value === 'all') {
+            chip.classList.add('active');
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+    
+    searchInput.value = '';
+    clearBtn.classList.remove('visible');
+    
+    applyFilters();
+}
+
+// Update Active Filters Display
+function updateActiveFiltersDisplay() {
+    activeFiltersContainer.innerHTML = '';
+    
+    // Level
+    if (activeFilters.level !== 'all') {
+        addActiveFilterTag('Рівень: ' + activeFilters.level, 'level');
+    }
+    
+    // Cost
+    if (activeFilters.cost !== 'all') {
+        const costLabel = activeFilters.cost === 'free' ? 'Безкоштовні' : 'Платні';
+        addActiveFilterTag(costLabel, 'cost');
+    }
+    
+    // Categories
+    activeFilters.categories.forEach(cat => {
+        const labels = {
+            'basics': 'Основи',
+            'compliance': 'Compliance',
+            'vendor': 'Вендори',
+            'sales': 'Продажі',
+            'soft': 'Soft Skills',
+            'cert': 'Сертифікації'
+        };
+        addActiveFilterTag(labels[cat] || cat, 'category', cat);
+    });
+}
+
+// Add Active Filter Tag
+function addActiveFilterTag(label, type, value = null) {
+    const tag = document.createElement('div');
+    tag.className = 'active-filter-tag';
+    tag.innerHTML = `
+        <span>${label}</span>
+        <span class="remove">✕</span>
+    `;
+    
+    tag.querySelector('.remove').addEventListener('click', () => {
+        removeFilter(type, value);
+    });
+    
+    activeFiltersContainer.appendChild(tag);
+}
+
+// Remove Filter
+function removeFilter(type, value) {
+    if (type === 'level') {
+        activeFilters.level = 'all';
+        document.querySelector('[data-filter="level"][data-value="all"]').classList.add('active');
+        document.querySelectorAll('[data-filter="level"]:not([data-value="all"])').forEach(c => c.classList.remove('active'));
+    } else if (type === 'cost') {
+        activeFilters.cost = 'all';
+        document.querySelector('[data-filter="cost"][data-value="all"]').classList.add('active');
+        document.querySelectorAll('[data-filter="cost"]:not([data-value="all"])').forEach(c => c.classList.remove('active'));
+    } else if (type === 'category') {
+        activeFilters.categories = activeFilters.categories.filter(v => v !== value);
+        document.querySelector(`[data-filter="category"][data-value="${value}"]`).classList.remove('active');
+    }
+    
+    applyFilters();
+}
+
+// Update Resource Count
+function updateResourceCount(count = null) {
+    if (count === null) {
+        count = allCards.length;
+    }
+    resourceCount.textContent = `Показано: ${count} з ${allCards.length} ресурсів`;
+}
+
+// Toggle Empty State
+function toggleEmptyState(show) {
+    if (show) {
+        resourcesGrid.style.display = 'none';
+        emptyState.style.display = 'block';
+    } else {
+        resourcesGrid.style.display = 'grid';
+        emptyState.style.display = 'none';
+    }
+}
+
+// Keyboard Shortcuts
+function handleKeyboardShortcuts(e) {
+    // "/" to focus search
+    if (e.key === '/' && document.activeElement !== searchInput) {
         e.preventDefault();
         searchInput.focus();
     }
     
+    // "Escape" to clear search
     if (e.key === 'Escape' && document.activeElement === searchInput) {
-        searchInput.blur();
-        searchInput.value = '';
-        document.querySelectorAll('tbody tr').forEach(row => row.style.display = '');
+        if (searchInput.value) {
+            clearSearch();
+        } else {
+            searchInput.blur();
+        }
     }
-});
+}
+
+// Debounce utility
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Export for inline use
+window.resetAllFilters = resetAllFilters;
+
+console.log('PAM Hub script loaded successfully');
