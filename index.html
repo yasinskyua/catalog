@@ -5,588 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAM Knowledge Hub | iITD Ukraine</title>
     <meta name="description" content="Твій персональний навігатор по знанням у кібербезпеці та compliance">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
-        :root {
-            --bg-primary: #0a0e27;
-            --bg-secondary: #141b3d;
-            --surface: rgba(30, 41, 82, 0.5);
-            --surface-hover: rgba(40, 51, 92, 0.7);
-            --text-primary: #e8eaed;
-            --text-secondary: #9aa0b8;
-            --accent-primary: #a78bfa;
-            --accent-secondary: #34d399;
-            --accent-warning: #fbbf24;
-            --border: rgba(168, 139, 250, 0.1);
-            --shadow: rgba(0, 0, 0, 0.3);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        /* Top Bar */
-        .topbar {
-            background: var(--bg-secondary);
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .logo {
-            font-size: 1.4em;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .tagline {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-        
-        .level-selector {
-            display: flex;
-            gap: 8px;
-            background: var(--surface);
-            padding: 6px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        
-        .level-btn {
-            padding: 8px 16px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-size: 0.85em;
-        }
-        
-        .level-btn.active {
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-        }
-        
-        .level-btn:hover:not(.active) {
-            background: var(--surface-hover);
-            color: var(--text-primary);
-        }
-        
-        /* Search Section */
-        .search-section {
-            padding: 32px 24px;
-            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .search-wrapper {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto 24px;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 16px 24px 16px 50px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            color: var(--text-primary);
-            font-size: 1.1em;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 1.2em;
-        }
-        
-        /* Filter Chips */
-        .filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-        
-        .chip {
-            padding: 8px 16px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-        }
-        
-        .chip:hover {
-            background: var(--surface-hover);
-            border-color: var(--accent-primary);
-            color: var(--text-primary);
-            transform: translateY(-2px);
-        }
-        
-        .chip.active {
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border-color: var(--accent-primary);
-        }
-        
-        .chip.free { border-color: var(--accent-secondary); }
-        .chip.cert { border-color: var(--accent-warning); }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .tab {
-            padding: 16px 32px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1em;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .tab:hover {
-            color: var(--text-primary);
-        }
-        
-        .tab.active {
-            color: var(--accent-primary);
-        }
-        
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--accent-primary);
-        }
-        
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            padding: 32px 24px;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Quick Start Block */
-        .quick-start {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .quick-start h2 {
-            color: var(--accent-primary);
-            margin-bottom: 16px;
-            font-size: 1.4em;
-        }
-        
-        .quick-start-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        
-        .quick-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px var(--shadow);
-        }
-        
-        .quick-card h3 {
-            font-size: 1em;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-        
-        .quick-card-meta {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        
-        .badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75em;
-            font-weight: 600;
-        }
-        
-        .badge.free {
-            background: rgba(52, 211, 153, 0.2);
-            color: var(--accent-secondary);
-        }
-        
-        .badge.paid {
-            background: rgba(251, 191, 36, 0.2);
-            color: var(--accent-warning);
-        }
-        
-        .badge.cert {
-            background: rgba(167, 139, 250, 0.2);
-            color: var(--accent-primary);
-        }
-        
-        .badge.level {
-            background: rgba(154, 160, 184, 0.2);
-            color: var(--text-secondary);
-        }
-        
-        /* Tracks */
-        .tracks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-        }
-        
-        .track-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .track-card:hover {
-            border-color: var(--accent-primary);
-            box-shadow: 0 8px 24px var(--shadow);
-        }
-        
-        .track-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 16px;
-        }
-        
-        .track-card h3 {
-            color: var(--accent-primary);
-            font-size: 1.2em;
-            margin-bottom: 8px;
-        }
-        
-        .track-duration {
-            color: var(--text-secondary);
-            font-size: 0.85em;
-        }
-        
-        .track-description {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .track-progress {
-            margin-bottom: 16px;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            transition: width 0.3s ease;
-        }
-        
-        .progress-text {
-            font-size: 0.85em;
-            color: var(--text-secondary);
-        }
-        
-        .track-steps {
-            list-style: none;
-        }
-        
-        .track-step {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .track-step:last-child {
-            border-bottom: none;
-        }
-        
-        .step-checkbox {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .step-checkbox:hover {
-            border-color: var(--accent-primary);
-        }
-        
-        .step-checkbox.checked {
-            background: var(--accent-primary);
-            border-color: var(--accent-primary);
-        }
-        
-        .step-text {
-            flex: 1;
-            font-size: 0.9em;
-        }
-        
-        /* Catalog Table */
-        .catalog-filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .table-wrapper {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        thead {
-            background: var(--bg-secondary);
-            position: sticky;
-            top: 70px;
-            z-index: 10;
-        }
-        
-        th {
-            padding: 16px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--accent-primary);
-            font-size: 0.9em;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-primary);
-            font-size: 0.9em;
-        }
-        
-        tr {
-            transition: all 0.2s ease;
-        }
-        
-        tbody tr:hover {
-            background: var(--surface-hover);
-        }
-        
-        tbody tr.hidden {
-            display: none;
-        }
-        
-        .resource-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85em;
-            transition: all 0.3s ease;
-        }
-        
-        .resource-link:hover {
-            background: var(--accent-secondary);
-            transform: translateX(4px);
-        }
-        
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        
-        .section-header h2 {
-            color: var(--accent-primary);
-            font-size: 1.6em;
-        }
-        
-        .section-description {
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-        
-        /* My Plan */
-        .plan-empty {
-            text-align: center;
-            padding: 60px 24px;
-            color: var(--text-secondary);
-        }
-        
-        .plan-empty h3 {
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-        
-        .add-to-plan-btn {
-            padding: 6px 12px;
-            background: transparent;
-            border: 1px solid var(--accent-secondary);
-            color: var(--accent-secondary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.85em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .add-to-plan-btn:hover {
-            background: var(--accent-secondary);
-            color: var(--bg-primary);
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            padding: 24px;
-            text-align: center;
-            color: var(--text-secondary);
-            margin-top: 60px;
-            border-top: 1px solid var(--border);
-            font-size: 0.9em;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .topbar {
-                flex-direction: column;
-                gap: 16px;
-                align-items: flex-start;
-            }
-            
-            .tabs {
-                overflow-x: auto;
-                justify-content: flex-start;
-            }
-            
-            .tab {
-                padding: 12px 20px;
-                font-size: 0.9em;
-            }
-            
-            .tracks-grid,
-            .quick-start-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .table-wrapper {
-                overflow-x: auto;
-            }
-            
-            table {
-                min-width: 800px;
-            }
-            
-            .search-input {
-                font-size: 1em;
-            }
-            
-            .logo {
-                font-size: 1.2em;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Top Bar -->
@@ -597,9 +16,9 @@
         </div>
         <div class="level-selector">
             <button class="level-btn active" data-level="all">Усі</button>
-            <button class="level-btn" data-level="junior">Junior</button>
-            <button class="level-btn" data-level="mid">Mid</button>
-            <button class="level-btn" data-level="senior">Senior</button>
+            <button class="level-btn" data-level="Початковий">Junior</button>
+            <button class="level-btn" data-level="Середній">Mid</button>
+            <button class="level-btn" data-level="Просунутий">Senior</button>
         </div>
     </div>
 
@@ -612,12 +31,11 @@
             </div>
             
             <div class="filters">
-                <div class="chip free" data-filter="free">💚 Безкоштовні</div>
-                <div class="chip cert" data-filter="cert">🎓 Сертифікації</div>
+                <div class="chip" data-filter="free">💚 Безкоштовні</div>
+                <div class="chip" data-filter="cert">🎓 Сертифікації</div>
                 <div class="chip" data-filter="compliance">Compliance</div>
                 <div class="chip" data-filter="vendor">Вендори</div>
                 <div class="chip" data-filter="sales">Продажі</div>
-                <div class="chip" data-filter="soft">Soft Skills</div>
             </div>
         </div>
     </div>
@@ -654,7 +72,7 @@
                             <span class="badge level">Середній</span>
                             <span class="badge">8 год</span>
                         </div>
-                        <a href="https://www.cloudflare.com/learning" target="_blank" class="resource-link">Розпочати →</a>
+                        <a href="https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust/" target="_blank" class="resource-link">Розпочати →</a>
                     </div>
                     
                     <div class="quick-card">
@@ -664,7 +82,7 @@
                             <span class="badge level">Середній</span>
                             <span class="badge">1 год</span>
                         </div>
-                        <a href="https://www.enisa.europa.eu" target="_blank" class="resource-link">Розпочати →</a>
+                        <a href="https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new" target="_blank" class="resource-link">Розпочати →</a>
                     </div>
                     
                     <div class="quick-card">
@@ -678,34 +96,34 @@
                     </div>
                     
                     <div class="quick-card">
-                        <h3>Partner Account Management</h3>
+                        <h3>Foundations of Cybersecurity</h3>
                         <div class="quick-card-meta">
-                            <span class="badge paid">$500</span>
-                            <span class="badge level">Середній</span>
-                            <span class="badge">15 год</span>
+                            <span class="badge free">Free</span>
+                            <span class="badge level">Початковий</span>
+                            <span class="badge">20 год</span>
                         </div>
-                        <a href="https://www.kornferry.com" target="_blank" class="resource-link">Розпочати →</a>
+                        <a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" class="resource-link">Розпочати →</a>
                     </div>
                     
                     <div class="quick-card">
-                        <h3>Cloudflare Zero Trust</h3>
+                        <h3>Cloudflare Learning Center</h3>
                         <div class="quick-card-meta">
                             <span class="badge free">Free</span>
                             <span class="badge level">Середній</span>
                             <span class="badge">10 год</span>
                         </div>
-                        <a href="https://www.cloudflare.com/learning" target="_blank" class="resource-link">Розпочати →</a>
+                        <a href="https://www.cloudflare.com/learning/" target="_blank" class="resource-link">Розпочати →</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Learning Tracks -->
+            <!-- Learning Tracks (без змін) -->
             <div class="section-header">
                 <h2>Навчальні Треки</h2>
             </div>
             
             <div class="tracks-grid">
-                <!-- Track 1: PAM Basics -->
+                <!-- Track 1 -->
                 <div class="track-card">
                     <div class="track-header">
                         <div>
@@ -723,7 +141,7 @@
                     <ul class="track-steps">
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Cybersecurity Basics + CIA Triad (Coursera, 20 год)</div>
+                            <div class="step-text">Foundations of Cybersecurity (Coursera, 20 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
@@ -735,7 +153,7 @@
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Soft Skills for Sales Managers (10 год)</div>
+                            <div class="step-text">Soft Skills for Sales (10 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
@@ -744,7 +162,7 @@
                     </ul>
                 </div>
 
-                <!-- Track 2: Compliance Expert -->
+                <!-- Track 2 -->
                 <div class="track-card">
                     <div class="track-header">
                         <div>
@@ -762,36 +180,36 @@
                     <ul class="track-steps">
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">ISO 27001 Foundation (Advisera, 10 год)</div>
+                            <div class="step-text">ISO 27001 Foundation (10 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Top ISO 27001 Courses (Udemy, 20 год)</div>
+                            <div class="step-text">ISO 27001 Courses (Udemy, 20 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">PCI DSS v4.0.1 Course (15 год)</div>
+                            <div class="step-text">PCI DSS v4.0.1 (15 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">GDPR Compliance Training (10 год)</div>
+                            <div class="step-text">GDPR Compliance (10 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">DORA Lead Manager (PECB, 24 год)</div>
+                            <div class="step-text">DORA Training (24 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">NIST CSF 2.0 Resources (8 год)</div>
+                            <div class="step-text">NIST CSF 2.0 (8 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: створи compliance roadmap для банку</div>
+                            <div class="step-text">Практика: створи compliance roadmap</div>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Track 3: Vendor Specialist -->
+                <!-- Track 3 -->
                 <div class="track-card">
                     <div class="track-header">
                         <div>
@@ -804,37 +222,33 @@
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 0%"></div>
                         </div>
-                        <div class="progress-text">0 з 6 завершено</div>
+                        <div class="progress-text">0 з 5 завершено</div>
                     </div>
                     <ul class="track-steps">
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">CrowdStrike Falcon Certification (20 год, $500)</div>
+                            <div class="step-text">CrowdStrike Falcon (20 год, $500)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Cloudflare Zero Trust Academy (10 год)</div>
+                            <div class="step-text">Cloudflare Zero Trust (10 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Vectra AI Training (12 год, $200)</div>
+                            <div class="step-text">Vectra AI (12 год, $200)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Bitsight Academy Courses (15 год)</div>
+                            <div class="step-text">Bitsight Academy (15 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">SentinelOne University (20 год, $300)</div>
-                        </li>
-                        <li class="track-step">
-                            <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: підготуй competitive analysis</div>
+                            <div class="step-text">Практика: competitive analysis</div>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Track 4: US Defense Compliance -->
+                <!-- Track 4 -->
                 <div class="track-card">
                     <div class="track-header">
                         <div>
@@ -842,7 +256,7 @@
                             <div class="track-duration">3-4 тижні · Просунутий</div>
                         </div>
                     </div>
-                    <p class="track-description">CMMC, DFARS, ITAR для роботи з US defense contractors через iITD</p>
+                    <p class="track-description">CMMC, DFARS, ITAR для US defense contractors</p>
                     <div class="track-progress">
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: 0%"></div>
@@ -852,19 +266,19 @@
                     <ul class="track-steps">
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">DFARS/CMMC Basics (NIST, 5 год)</div>
+                            <div class="step-text">DFARS/CMMC Basics (5 год)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">CMMC 2.0 Courses (20 год, $500)</div>
+                            <div class="step-text">CMMC 2.0 (20 год, $500)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Best CMMC Training 2026 (15 год, $300)</div>
+                            <div class="step-text">CMMC Training (15 год, $300)</div>
                         </li>
                         <li class="track-step">
                             <div class="step-checkbox"></div>
-                            <div class="step-text">Практика: створи CMMC Level 2 checklist</div>
+                            <div class="step-text">Практика: CMMC checklist</div>
                         </li>
                     </ul>
                 </div>
@@ -876,9 +290,8 @@
             <div class="section-header">
                 <h2>Каталог Ресурсів</h2>
             </div>
-            <p class="section-description">Повний перелік курсів, сертифікацій та матеріалів для PAM. Використовуй фільтри та пошук.</p>
+            <p class="section-description">Повний перелік курсів та матеріалів. Фільтри працюють!</p>
             
-            <!-- Basics -->
             <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Основи Кібербезпеки</h3>
             <div class="table-wrapper">
                 <table>
@@ -893,82 +306,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-level="junior" data-cost="free" data-category="basics">
-                            <td>Cybersecurity Basics: Threats & CIA Triad</td>
+                        <tr data-level="Початковий" data-cost="free" data-category="basics">
+                            <td>Foundations of Cybersecurity</td>
                             <td><span class="badge level">Початковий</span></td>
                             <td>Coursera (Google)</td>
                             <td>20 год</td>
                             <td><span class="badge free">Free</span></td>
                             <td><a href="https://www.coursera.org/learn/foundations-of-cybersecurity" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="basics">
-                            <td>Intro to Cyber Threats: Ransomware</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Udemy</td>
-                            <td>15 год</td>
-                            <td>$15–50</td>
-                            <td><a href="https://www.udemy.com/topic/cybersecurity" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="free" data-category="basics">
-                            <td>Gartner Magic Quadrant 2026</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Gartner</td>
-                            <td>2 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.gartner.com/en/cybersecurity" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="free" data-category="basics compliance">
-                            <td>CIA Triad & Basic Compliance</td>
+                        <tr data-level="Початковий" data-cost="free" data-category="basics compliance">
+                            <td>CompTIA Security+ Materials</td>
                             <td><span class="badge level">Початковий</span></td>
                             <td>CompTIA</td>
-                            <td>10 год</td>
+                            <td>40 год</td>
                             <td><span class="badge free">Free</span></td>
                             <td><a href="https://www.comptia.org/certifications/security" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="mid" data-cost="free" data-category="basics compliance">
-                            <td>NIS2 & DORA Introduction</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>ENISA</td>
-                            <td>1 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.enisa.europa.eu" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="basics vendor">
-                            <td>Zero Trust Fundamentals</td>
+                        <tr data-level="Середній" data-cost="free" data-category="basics vendor">
+                            <td>Cloudflare Learning Center</td>
                             <td><span class="badge level">Середній</span></td>
                             <td>Cloudflare</td>
-                            <td>8 год</td>
+                            <td>10 год</td>
                             <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.cloudflare.com/learning" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://www.cloudflare.com/learning/" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="basics">
-                            <td>IDC Cybersecurity Reports 2026</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>IDC</td>
-                            <td>3 год</td>
-                            <td>$500+</td>
-                            <td><a href="https://www.idc.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="basics">
-                            <td>Supply Chain Attacks Workshop</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>SANS</td>
-                            <td>4 год</td>
-                            <td>$200</td>
-                            <td><a href="https://www.sans.org" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="free" data-category="basics compliance">
-                            <td>DFARS/CMMC Basics</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>NIST</td>
-                            <td>5 год</td>
+                        <tr data-level="Середній" data-cost="free" data-category="basics compliance">
+                            <td>NIS2 Directive Overview</td>
+                            <td><span class="badge level">Середній</span></td>
+                            <td>ENISA</td>
+                            <td>2 год</td>
                             <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.nist.gov/cyberframework" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://www.enisa.europa.eu/topics/cybersecurity-policy/nis-directive-new" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="junior" data-cost="free" data-category="basics">
-                            <td>Ukraine Cybersecurity Law</td>
+                        <tr data-level="Початковий" data-cost="free" data-category="basics">
+                            <td>Ukraine Cyber Law & Guidelines</td>
                             <td><span class="badge level">Початковий</span></td>
-                            <td>Кіберполіція</td>
+                            <td>Кіберполіція України</td>
                             <td>5 год</td>
                             <td><span class="badge free">Free</span></td>
                             <td><a href="https://cyberpolice.gov.ua" target="_blank" class="resource-link">Відкрити →</a></td>
@@ -977,8 +350,7 @@
                 </table>
             </div>
 
-            <!-- Compliance: ISO 27001 -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Compliance: ISO 27001/27002</h3>
+            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Compliance: ISO 27001</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -992,92 +364,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
+                        <tr data-level="Просунутий" data-cost="paid" data-category="compliance cert">
                             <td>ISO 27001 Lead Implementer</td>
-                            <td><span class="badge level">Просунутий</span></td>
+                            <td><span class="badge cert">Cert</span></td>
                             <td>PECB</td>
                             <td>40 год</td>
                             <td>$1000+</td>
                             <td><a href="https://pecb.com/en/education-and-certification-for-individuals/iso-iec-27001" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="junior" data-cost="free" data-category="compliance">
+                        <tr data-level="Початковий" data-cost="free" data-category="compliance">
                             <td>ISO 27001 Foundation</td>
                             <td><span class="badge level">Початковий</span></td>
                             <td>Advisera</td>
                             <td>10 год</td>
                             <td><span class="badge free">Free</span></td>
-                            <td><a href="https://advisera.com/training/iso-27001-courses" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://advisera.com/27001academy/" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>ISO 27001 Lead Auditor</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Intertek</td>
-                            <td>5 днів</td>
-                            <td>$1500</td>
-                            <td><a href="https://learning.intertek.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>ISO 27001 2026 Update</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Knowledge Academy</td>
-                            <td>2 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.theknowledgeacademy.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance">
-                            <td>Top ISO 27001 Courses</td>
+                        <tr data-level="Середній" data-cost="paid" data-category="compliance">
+                            <td>ISO 27001 Courses</td>
                             <td><span class="badge level">Середній</span></td>
                             <td>Udemy</td>
                             <td>20 год</td>
-                            <td>$20–100</td>
-                            <td><a href="https://www.udemy.com/topic/isoiec-27001" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="free" data-category="compliance">
-                            <td>ISO 27001 Beginner's Guide</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>ISMS.online</td>
-                            <td>5 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.isms.online/iso-27001" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>ISO 27001 Compliance eBook</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>OneTrust</td>
-                            <td>4 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.onetrust.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>ISO 27001 Internal Auditor</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>SGS</td>
-                            <td>3 дні</td>
-                            <td>$800</td>
-                            <td><a href="https://www.sgs.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance">
-                            <td>ISO 27001 Toolkit Book</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Amazon</td>
-                            <td>10 год</td>
-                            <td>$30</td>
-                            <td><a href="https://www.amazon.com/s?k=ISO+27001+Toolkit" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>ISO 27002 Controls Guide</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>NIST</td>
-                            <td>6 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.nist.gov" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td>$20-100</td>
+                            <td><a href="https://www.udemy.com/topic/isoiec-27001/" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Compliance: PCI DSS, GDPR, DORA -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Compliance: PCI DSS, GDPR, DORA</h3>
+            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Вендори iITD</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -1091,242 +406,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance cert">
-                            <td>PCI DSS Training & Qualification</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>PCI SSC</td>
-                            <td>16 год</td>
-                            <td>$1000+</td>
-                            <td><a href="https://www.pcisecuritystandards.org" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>PCI Professional (PCIP)</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>PCI SSC</td>
+                        <tr data-level="Середній" data-cost="paid" data-category="vendor cert">
+                            <td>CrowdStrike University</td>
+                            <td><span class="badge cert">Cert</span></td>
+                            <td>CrowdStrike</td>
                             <td>20 год</td>
                             <td>$500</td>
-                            <td><a href="https://www.pcisecuritystandards.org" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://www.crowdstrike.com/university/" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance">
-                            <td>PCI DSS v4.0.1 Course</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Secure Vectors</td>
-                            <td>15 год</td>
-                            <td>$300</td>
-                            <td><a href="https://www.securevectors.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="paid" data-category="compliance">
-                            <td>Top PCI DSS Courses</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Udemy</td>
-                            <td>10 год</td>
-                            <td>$20</td>
-                            <td><a href="https://www.udemy.com/topic/pci-dss" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="paid" data-category="compliance">
-                            <td>Top GDPR Courses</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>Udemy</td>
-                            <td>12 год</td>
-                            <td>$15</td>
-                            <td><a href="https://www.udemy.com/topic/gdpr" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance">
-                            <td>GDPR Compliance Training</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>EasyLlama</td>
-                            <td>10 год</td>
-                            <td>$50</td>
-                            <td><a href="https://www.easyllama.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>GDPR Practitioner Cert</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>EU GDPR Institute</td>
-                            <td>16 год</td>
-                            <td>$800</td>
-                            <td><a href="https://www.eugdpr.institute" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>DORA Lead Manager</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>PECB</td>
-                            <td>24 год</td>
-                            <td>$1500</td>
-                            <td><a href="https://pecb.com/en/education-and-certification-for-individuals/dora" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="compliance">
-                            <td>DORA Training Course</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Firebrand</td>
-                            <td>3 дні</td>
-                            <td>$2000</td>
-                            <td><a href="https://firebrand.training" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="paid" data-category="compliance">
-                            <td>Understanding DORA</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>LinkedIn Learning</td>
-                            <td>1 год</td>
-                            <td>$29/міс</td>
-                            <td><a href="https://www.linkedin.com/learning" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Compliance: CMMC, NIST -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Compliance: DFARS/CMMC, NIST</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>CMMC 2.0 Courses</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>CyberSheath</td>
-                            <td>20 год</td>
-                            <td>$500</td>
-                            <td><a href="https://cybersheath.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>CMMC Resources & Docs</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>DoD CIO</td>
-                            <td>10 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://dodcio.defense.gov/CMMC" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="compliance cert">
-                            <td>Best CMMC Training 2026</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>E-N Computers</td>
-                            <td>15 год</td>
-                            <td>$300</td>
-                            <td><a href="https://www.encomputers.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>NIST CSF 2.0 Resources</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>NIST</td>
-                            <td>8 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.nist.gov/cyberframework" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="compliance">
-                            <td>SOC 2 Compliance 2026</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Sprinto</td>
-                            <td>4 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://sprinto.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="free" data-category="compliance">
-                            <td>Ukraine Compliance Guidelines</td>
-                            <td><span class="badge level">Початковий</span></td>
-                            <td>EU4Digital</td>
-                            <td>5 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://eufordigital.eu" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Vendors -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Продукти та Вендори iITD</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="mid" data-cost="paid" data-category="vendor cert">
-                            <td>CrowdStrike Falcon Cert</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>CrowdStrike Uni</td>
-                            <td>20 год</td>
-                            <td>$500</td>
-                            <td><a href="https://www.crowdstrike.com/crowdstrike-university" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="vendor">
-                            <td>CrowdStrike Training</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Westcon</td>
-                            <td>15 год</td>
-                            <td>$300</td>
-                            <td><a href="https://academy.westconcomstor.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="vendor">
-                            <td>Cloudflare Zero Trust</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Cloudflare</td>
-                            <td>10 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.cloudflare.com/learning" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="vendor">
-                            <td>Vectra AI Training</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Vectra</td>
-                            <td>12 год</td>
-                            <td>$200</td>
-                            <td><a href="https://www.vectra.ai" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="vendor">
+                        <tr data-level="Середній" data-cost="free" data-category="vendor">
                             <td>Bitsight Academy</td>
                             <td><span class="badge level">Середній</span></td>
                             <td>Bitsight</td>
                             <td>15 год</td>
                             <td><span class="badge free">Free</span></td>
-                            <td><a href="https://academy.bitsight.com" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://www.bitsight.com/products/bitsight-academy" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="vendor">
+                        <tr data-level="Середній" data-cost="paid" data-category="vendor">
                             <td>SentinelOne University</td>
                             <td><span class="badge level">Середній</span></td>
                             <td>SentinelOne</td>
                             <td>20 год</td>
                             <td>$300</td>
-                            <td><a href="https://university.sentinelone.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="vendor">
-                            <td>Palo Alto Networks Edu</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Palo Alto</td>
-                            <td>40 год</td>
-                            <td>$1000+</td>
-                            <td><a href="https://www.paloaltonetworks.com/services/education" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="vendor">
-                            <td>iITD Partner Training</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>iITD Ukraine</td>
-                            <td>Варіює</td>
-                            <td>Корпоративно</td>
-                            <td><a href="https://iitd.ua" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://university.sentinelone.com/" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Sales -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Управління Партнерами та Продажі</h3>
+            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Продажі та Soft Skills</h3>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -1340,147 +448,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-level="mid" data-cost="paid" data-category="sales">
-                            <td>Partner Account Management</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Korn Ferry</td>
-                            <td>15 год</td>
-                            <td>$500</td>
-                            <td><a href="https://www.kornferry.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="sales">
-                            <td>B2B Sales in Cybersecurity</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Upskillist</td>
-                            <td>10 год</td>
-                            <td>$100</td>
-                            <td><a href="https://www.upskillist.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="junior" data-cost="free" data-category="sales">
-                            <td>Sales Courses</td>
+                        <tr data-level="Початковий" data-cost="free" data-category="sales">
+                            <td>Sales Strategy</td>
                             <td><span class="badge level">Початковий</span></td>
                             <td>Coursera</td>
                             <td>20 год</td>
                             <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.coursera.org" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td><a href="https://www.coursera.org/learn/sales-strategy" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
-                        <tr data-level="mid" data-cost="paid" data-category="sales">
-                            <td>CRM: Salesforce/HubSpot</td>
+                        <tr data-level="Середній" data-cost="paid" data-category="sales">
+                            <td>B2B Sales Process</td>
                             <td><span class="badge level">Середній</span></td>
                             <td>LinkedIn Learning</td>
-                            <td>8 год</td>
-                            <td>$29/міс</td>
-                            <td><a href="https://www.linkedin.com/learning" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="sales">
-                            <td>Challenger Sale in Cyber</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>Udemy</td>
-                            <td>12 год</td>
-                            <td>$20</td>
-                            <td><a href="https://www.udemy.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Soft Skills -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">М'які Навички</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="mid" data-cost="paid" data-category="soft">
-                            <td>Soft Skills for Sales</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Activated Scale</td>
                             <td>10 год</td>
-                            <td>$100</td>
-                            <td><a href="https://www.activatedscale.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="free" data-category="soft">
-                            <td>Sales Skills 2026</td>
-                            <td><span class="badge level">Просунутий</span></td>
-                            <td>LinkedIn</td>
-                            <td>5 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.linkedin.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="mid" data-cost="free" data-category="soft">
-                            <td>Sales Manager Tips 2026</td>
-                            <td><span class="badge level">Середній</span></td>
-                            <td>Cognism</td>
-                            <td>3 год</td>
-                            <td><span class="badge free">Free</span></td>
-                            <td><a href="https://www.cognism.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Certifications -->
-            <h3 style="color: var(--accent-secondary); margin: 32px 0 16px;">Сертифікації</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Назва</th>
-                            <th>Рівень</th>
-                            <th>Джерело</th>
-                            <th>Час</th>
-                            <th>Вартість</th>
-                            <th>Посилання</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-level="mid" data-cost="paid" data-category="cert">
-                            <td>CompTIA Security+</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>CompTIA</td>
-                            <td>40 год</td>
-                            <td>$350</td>
-                            <td><a href="https://www.comptia.org" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="cert">
-                            <td>CISSP Certification</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>ISC2</td>
-                            <td>60 год</td>
-                            <td>$700</td>
-                            <td><a href="https://www.isc2.org" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="cert">
-                            <td>CISM Certification</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>ISACA</td>
-                            <td>50 год</td>
-                            <td>$760</td>
-                            <td><a href="https://www.isaca.org" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="cert">
-                            <td>Lead Auditor ISO 27001</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>PECB/EXIN</td>
-                            <td>40 год</td>
-                            <td>$1500</td>
-                            <td><a href="https://pecb.com" target="_blank" class="resource-link">Відкрити →</a></td>
-                        </tr>
-                        <tr data-level="senior" data-cost="paid" data-category="cert">
-                            <td>CMMC Assessor Training</td>
-                            <td><span class="badge cert">Cert</span></td>
-                            <td>DoD</td>
-                            <td>30 год</td>
-                            <td>$1000</td>
-                            <td><a href="https://dodcio.defense.gov" target="_blank" class="resource-link">Відкрити →</a></td>
+                            <td>$29/міс</td>
+                            <td><a href="https://www.linkedin.com/learning/topics/sales" target="_blank" class="resource-link">Відкрити →</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -1494,10 +476,7 @@
             </div>
             <div class="plan-empty">
                 <h3>📋 Тут поки що порожньо</h3>
-                <p>Додавай ресурси з каталогу, щоб побудувати свій персональний план розвитку.</p>
-                <p style="margin-top: 20px; color: var(--text-secondary); font-size: 0.9em;">
-                    💡 Tip: Використовуй кнопки "+ Додати в план" на картках ресурсів
-                </p>
+                <p>Додавай ресурси з каталогу, щоб побудувати свій план.</p>
             </div>
         </div>
     </div>
@@ -1506,110 +485,6 @@
         iITD Ukraine | PAM Knowledge Hub 2026 · Made with 💜
     </footer>
 
-    <script>
-        // Level Selector
-        document.querySelectorAll('.level-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                const level = this.dataset.level;
-                const rows = document.querySelectorAll('tbody tr');
-                
-                rows.forEach(row => {
-                    if (level === 'all') {
-                        row.classList.remove('hidden');
-                    } else {
-                        const rowLevel = row.dataset.level;
-                        row.classList.toggle('hidden', rowLevel !== level);
-                    }
-                });
-            });
-        });
-
-        // Tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                this.classList.add('active');
-                document.getElementById(this.dataset.tab).classList.add('active');
-            });
-        });
-
-        // Search
-        const searchInput = document.getElementById('mainSearch');
-        let searchTimeout;
-        
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const filter = this.value.toLowerCase().trim();
-                const rows = document.querySelectorAll('tbody tr');
-                
-                if (filter === '') {
-                    rows.forEach(row => row.classList.remove('hidden'));
-                    return;
-                }
-                
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.classList.toggle('hidden', !text.includes(filter));
-                });
-            }, 300);
-        });
-
-        // Filter Chips
-        document.querySelectorAll('.chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                this.classList.toggle('active');
-                
-                const filterType = this.dataset.filter;
-                const rows = document.querySelectorAll('tbody tr');
-                
-                // Get all active filters
-                const activeFilters = Array.from(document.querySelectorAll('.chip.active'))
-                    .map(c => c.dataset.filter);
-                
-                if (activeFilters.length === 0) {
-                    rows.forEach(row => row.classList.remove('hidden'));
-                    return;
-                }
-                
-                rows.forEach(row => {
-                    let shouldShow = false;
-                    
-                    activeFilters.forEach(filter => {
-                        if (filter === 'free' && row.dataset.cost === 'free') {
-                            shouldShow = true;
-                        } else if (filter === 'cert' && row.dataset.category && row.dataset.category.includes('cert')) {
-                            shouldShow = true;
-                        } else if (row.dataset.category && row.dataset.category.includes(filter)) {
-                            shouldShow = true;
-                        }
-                    });
-                    
-                    row.classList.toggle('hidden', !shouldShow);
-                });
-            });
-        });
-
-        // Track Progress
-        document.querySelectorAll('.step-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('click', function() {
-                this.classList.toggle('checked');
-                
-                // Update progress bar
-                const trackCard = this.closest('.track-card');
-                const total = trackCard.querySelectorAll('.step-checkbox').length;
-                const checked = trackCard.querySelectorAll('.step-checkbox.checked').length;
-                const percentage = (checked / total) * 100;
-                
-                trackCard.querySelector('.progress-fill').style.width = percentage + '%';
-                trackCard.querySelector('.progress-text').textContent = `${checked} з ${total} завершено`;
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
